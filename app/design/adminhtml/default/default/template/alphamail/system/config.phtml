@@ -1,0 +1,70 @@
+<?php if($this->isAlphaMailSection()){ ?>
+	<?php
+		list($error_code, $message) = Mage::helper('alphamail/diagnostic')->tryAuthenticateWithToken(
+			Mage::helper('alphamail')->getPrimaryServerUrl(),
+			Mage::helper('alphamail')->getAuthenticationToken());
+	?>
+
+	<script type="text/javascript">
+		// state (0 = no error, -1 = validation error, -2 = misc error)
+		var authentication_error_code = <?php echo((int)$error_code); ?>;
+
+		var setFormEnabledState = function(toggle_element){
+			var elements_to_disable = "div#content div.entry-edit input, " +
+				"div#content div.entry-edit select:not([id='alphamail_general_activated'], [id='alphamail_general_activated']), " +
+				"div#content div.entry-edit button";
+
+			var enabled = $(toggle_element).getValue() == true;
+
+			$$(elements_to_disable).each(function(item){
+				if(enabled){
+					$(item).removeClassName('disabled');
+					$(item).enable();
+				}else{
+					$(item).addClassName('disabled');
+					$(item).disable();
+				}
+				$(item).setStyle({
+					background: '',
+					fontWeight: "normal",
+					color: 'inherit'
+				});
+			});
+		};
+
+		document.observe('dom:loaded', function(){
+			// Enable/disable input/controls to reflect plugin enabled state
+			var element = $$("select#alphamail_general_activated")[0];
+
+			var changeEnabledStateCallback = function(){
+				setFormEnabledState(this);
+			};
+
+			element.observe('change', changeEnabledStateCallback)
+				.observe('keyup', changeEnabledStateCallback);
+
+			setFormEnabledState(element);
+
+			// Render authentication token with indicating status color/icon
+			<?php if(Mage::helper('alphamail')->isActivated()){ ?>
+				if(authentication_error_code >= -1){
+					var token_input_element = $$("#alphamail_authentication_token")[0];
+					var original_value = token_input_element.getValue();
+					token_input_element.setStyle({
+						fontWeight: "bold",
+						color: authentication_error_code == 0 ? 'green' : 'red',
+						background: "transparent url('<?php echo($this->getSkinUrl('images/' . ($error_code == 0 ? 'success' : 'error') . '_msg_icon.gif')) ?>') no-repeat right center"
+					}).observe('keyup', function(){
+						if($(this).getValue() != original_value){
+							$(this).setStyle({
+								background:'',
+								fontWeight: "normal",
+								color: 'inherit'
+							});
+						}
+					});
+				}
+			<?php } ?>
+		});
+	</script>
+<?php } ?>

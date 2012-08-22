@@ -1,0 +1,45 @@
+<?php $row_offset = 0; ?>
+<?php if($templates != null){ ?>
+	<style type="text/css">
+		table.projects-grid tbody tr:hover {
+			cursor: pointer;
+			background: #fcf5dd;
+		}
+	</style>
+	<form action="<?php echo($this->getUrl('*/*/save/')) ?>" method="post">
+		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+			<div class="content-header">
+		    <table cellspacing="0">
+		        <tr>
+		            <td><h3>Templates</h3></td>
+		            <td class="form-buttons">
+		                <button class="scalable add" onclick="window.location='<?php echo($this->getUrl('*/*/create')) ?>'; return false;">
+		                	<span>Add New Template</span>
+		                </button>
+		            </td>
+		         </tr>
+		    </table>
+		</div>
+		<div class="grid">
+		    <div class="hor-scroll">
+				<table cellspacing="0" class="data projects-grid">
+					<thead>
+						<tr class="headings">
+							<th style='width:100px;'>Id</th>
+							<th style='width:auto;'>Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($templates as $template){ ++$row_offset; ?>
+							<?php $template_url = $this->getUrl('*/*/edit', array('id' => $template->id)); ?>
+							<tr class="<?php echo($row_offset % 2 == 0 ? 'odd' : 'even') ?>" onclick="window.location='<?php echo($template_url) ?>';">
+								<td class="a-left"><?php echo($this->htmlEscape($template->id)) ?></td>
+								<td class="a-left"><?php echo($this->htmlEscape($template->name)) ?></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+			    </table>
+		    </div>
+		</div>
+	</form>
+<?php } ?>

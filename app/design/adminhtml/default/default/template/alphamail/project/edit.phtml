@@ -1,0 +1,90 @@
+<?php if($project != null){ ?>
+    <style type="text/css">
+    	table.projects-grid tbody tr:hover {
+    		cursor: pointer;
+    		background: #fcf5dd;
+    	}
+    </style>
+
+    <form action="<?php echo($this->getUrl('*/*/save/', array('id' => $project->id))) ?>" method="post">
+    	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+    	<div id="page:main-container">
+    		<div class="content-header">
+                <table cellspacing="0">
+                    <tr>
+                        <td><h3>Edit AlphaMail Project (#<?php echo($project->id) ?>)</h3></td>
+                        <td class="form-buttons">
+                            <button type="button" class="scalable back" onclick="window.location='<?php echo($this->getUrl('*/*/index')) ?>'">
+                                <span>Back</span>
+                            </button>
+                            <button type="button" class="scalable save" onclick="submit();">
+                                <span>Save Project</span>
+                            </button>
+                        </td>
+                     </tr>
+                </table>
+    		</div>
+            <div class="entry-edit">
+                <div class="entry-edit-head">
+                    <h4 class="icon-head head-edit-form fieldset-legend">Project Information</h4>
+                    <div class="form-buttons">
+                    </div>
+                </div>
+                <div class="fieldset fieldset-wide" id="base_fieldset">
+                    <div class="hor-scroll">
+                        <table cellspacing="0" class="form-list">
+                            <tbody>
+                                <tr id="field_name">
+                                    <td class="label">
+                                        <label for="name">Name&nbsp;<span class="required">*</span></label>
+                                    </td>
+                                    <td class="value">
+                                        <input id="name" name="name" value="<?php echo($this->htmlEscape($project->name)) ?>" title="Project Name" type="text" class="input-text required-entry">
+                                    </td>
+                                </tr>
+                                <tr id="field_subject">
+                                    <td class="label">
+                                        <label for="subject">Subject&nbsp;<span class="required">*</span></label>
+                                    </td>
+                                    <td class="value">
+                                        <input id="subject" name="subject" value="<?php echo($this->htmlEscape($project->subject)) ?>" title="Subject" type="text" class="input-text required-entry">
+                                    </td>
+                                </tr>
+                                <tr id="field_template_id">
+                                    <td class="label">
+                                        <label for="subject">Template</label>
+                                    </td>
+                                    <td class="value">
+                                        <select name="template_id">
+                                            <option value="0">-- Not selected ---------------------------</option>
+                                            <?php foreach($templates as $template){ ?>
+                                                <option value="<?php echo($template->id) ?>" <?php if($template->id == $project->template_id){ echo("selected"); } ?>>
+                                                    <?php echo($this->escapeHtml($template->name)) ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="field_signature_id">
+                                    <td class="label">
+                                        <label for="subject">Signature</label>
+                                    </td>
+                                    <td class="value">
+                                        <select name="signature_id">
+                                            <option value="0">-- Not selected ---------------------------</option>
+                                            <?php foreach($signatures as $signature){ ?>
+                                                <option value="<?php echo($signature->id) ?>" <?php if($signature->id == $project->signature_id){ echo("selected"); } ?>>
+                                                    <?php echo($this->escapeHtml($signature->name)) ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    	</div>
+    </form>
+<?php } ?>

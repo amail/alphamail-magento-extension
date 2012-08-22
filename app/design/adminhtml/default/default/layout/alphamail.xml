@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout>
+	<adminhtml_system_config_edit>
+		<reference name="content">
+			<block type="alphamail/adminhtml_system_config_wrapper" name="alphamail.test.results" template="alphamail/system/config.phtml" before="-"></block>
+		</reference>
+		<!--reference name="before_body_end">
+			<block type="alphamail/adminhtml_template" name="alphamail.config.js" template="alphamail/config/js.phtml" after="-" />
+		</reference-->
+	</adminhtml_system_config_edit>
+</layout>

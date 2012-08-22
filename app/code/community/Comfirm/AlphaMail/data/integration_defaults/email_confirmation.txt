@@ -1,0 +1,11 @@
+Hej <# payload.customer.first_name #>!
+
+Innan du kan börja handla måste du bekräfta din epostadress. Det gör du genom att klicka på länken nedan.
+
+<# payload.confirmation.url #>
+
+Med vänliga hälsningar,
+<# payload.site.name #>
+
+
+Detta epostmeddelande var avsett för <# payload.customer.email #>

@@ -1,0 +1,47 @@
+<?php $row_offset = 0; ?>
+<?php if($templates != null) { ?>
+	<form action="<?php echo($this->getUrl('*/*/save/')) ?>" method="post">
+		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+		<div class="content-header">
+		    <table cellspacing="0">
+		        <tr>
+		            <td><h3>Edit Project Mappings</h3></td>
+		            <td class="form-buttons">
+		                <button type="button" class="scalable save" onclick="submit();">
+		                    <span>Save Project Mappings</span>
+		                </button>
+		            </td>
+		         </tr>
+		    </table>
+		</div>
+		<div class="grid">
+		    <div class="hor-scroll">
+				<table cellspacing="0" class="data" id="cmsBlockGrid_table">
+					<thead>
+						<tr class="headings">
+							<th><span class="nobr">Magento Template</span></th>
+							<th style='width:75%;'><span class="nobr">AlphaMail Project</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach($templates as $template_id => $template){ ++$row_offset; ?>
+							<tr class="<?php echo($row_offset % 2 == 0 ? 'odd' : 'even') ?> ">
+								<td class="a-left"><?php echo($this->htmlEscape($template['title'])) ?></td>
+								<td class="a-left">
+									<select name="<?php echo($template_id) ?>_project_id">
+										<option value="-1">-- Not selected ---------------------------</option>
+										<?php foreach($projects as $project){ ?>
+											<option value="<?php echo($project->id) ?>"<?php if($template['selected_id'] == $project->id){ echo('selected'); } ?>>
+												<?php echo($this->htmlEscape($project->name)) ?>
+											</option>
+										<?php } ?>
+									</select>
+								</td>
+							</tr>
+						<?php } ?>
+					</tbody>
+			    </table>
+		    </div>
+		</div>
+	</form>
+<?php } ?>

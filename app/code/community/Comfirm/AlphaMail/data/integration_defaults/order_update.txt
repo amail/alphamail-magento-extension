@@ -1,0 +1,30 @@
+Tack för din beställning!
+
+Vi hoppas att du kommer bli nöjd med dina nya produkter. Nedan finner du en bekräftelse på ditt köp.
+
+Med vänliga hälsningar,
+<# payload.site.name #>
+
+Du har beställt följande
+--------------------------------------------------------------------
+<#
+$i = 0
+while (i < payload.order.items.length) {
+	" * " payload.order.items[i].name " (" payload.order.items[i].sku ") "
+	payload.order.items[i].quantity " st á " payload.order.items[i].price " " payload.order.payment.currency.symbol 
+	" " (payload.order.items[i].price * payload.order.items[i].quantity) " " payload.order.payment.currency.symbol
+	\n
+	$i = i + 1
+}
+#>
+--------------------------------------------------------------------
+Total: <# payload.order.payment.amount.grand_total " " payload.order.payment.currency.symbol #>
+
+Levereras till
+Namn: <# payload.order.shipping_address.name #>
+Adress: 
+<# payload.order.shipping_address.street[0] #>
+<# payload.order.shipping_address.region.postal_code " "  payload.order.shipping_address.region.city #>
+
+
+Detta epostmeddelande var avsett för <# payload.customer.email #>

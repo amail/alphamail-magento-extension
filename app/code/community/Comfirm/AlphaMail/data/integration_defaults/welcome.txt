@@ -1,0 +1,11 @@
+Välkommen <# payload.customer.first_name #>!
+
+Tack för att du registrerade dig på <# payload.site.name #>, du kan nu börja handla hos oss. Nedan listar vi några av våra populäraste produkter som skulle kunna intressera dig.
+
+Ditt användarnamn: <# payload.customer.email #>
+
+Med vänliga hälsningar,
+<# payload.site.name #>
+
+
+Detta epostmeddelande var avsett för <# payload.customer.email #>
