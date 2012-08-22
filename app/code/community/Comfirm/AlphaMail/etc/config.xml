@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Comfirm_AlphaMail>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 		</Comfirm_AlphaMail>
 	</modules>
 	<frontend>

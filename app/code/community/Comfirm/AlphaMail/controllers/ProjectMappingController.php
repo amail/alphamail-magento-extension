@@ -16,7 +16,7 @@
                
                 $projects = $project_service->getAll();
                 $email_templates = $this->_getHelper()->getDefaultCoreTemplates();
-                $project_mappings = Mage::getModel('alphamail/project_map')->getCollection();
+                $project_mappings = Mage::getModel('alphamail/Project_Map')->getCollection();
 
                 foreach($email_templates as $template_id => $template){
                     $templates[$template_id] = array('title' => $template['label'], 'selected_id' => -1);
@@ -32,7 +32,7 @@
                     }
                 }
 
-                $this->_initialAction('projectmapping', 'index', array(
+                $this->_initialAction('projectMapping', 'index', array(
                         'templates' => $templates,
                         'projects' => $projects
                     )
@@ -44,7 +44,7 @@
             }
             catch(Exception $exception)
             {
-                $this->_initialAction('projectmapping', 'index', null, array('error' => $exception->getMessage()));
+                $this->_initialAction('projectMapping', 'index', null, array('error' => $exception->getMessage()));
             }
         }
 
@@ -53,7 +53,7 @@
             {
                 $changed_mappings = array();
                 
-                $project_mappings = Mage::getModel('alphamail/project_map')->getCollection();
+                $project_mappings = Mage::getModel('alphamail/Project_Map')->getCollection();
                 $template_mappings = $this->_getRequestTemplateMappings();
 
                 // Get all mappings that exist and have changed
@@ -81,7 +81,7 @@
                 }
 
                 foreach($changed_mappings as $template_id => $mapping_data){
-                    $model = Mage::getModel('alphamail/project_map');
+                    $model = Mage::getModel('alphamail/Project_Map');
                     
                     if($mapping_data['id'] > 0){
                         // Entity exists.. Update!
