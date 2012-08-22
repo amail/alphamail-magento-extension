@@ -21,7 +21,7 @@ abstract class Comfirm_AlphaMail_Controller_Abstract extends Mage_Adminhtml_Cont
         $block = $this->getLayout()->createBlock(
             'alphamail/' . $section,
             'alphamail.'.$section.'.'.$page,
-            array('template' => 'alphamail/'.$section.'/'.$page.'.phtml')
+            array('template' => 'alphamail/'.strtolower($section).'/'.strtolower($page).'.phtml')
         );
 
         // Set default vars
