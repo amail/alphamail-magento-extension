@@ -1,0 +1,7 @@
+{
+	"version": 1.0,
+	"name": "Magento - Welcome",
+	"description": "Mail sent when a user signs up",
+	"subject": "Hi <# payload.customer.first_name #>! Welcome to <# payload.site.name #>!",
+	"created": 1348267936
+}

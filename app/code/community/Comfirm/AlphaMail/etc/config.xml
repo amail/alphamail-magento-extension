@@ -2,19 +2,19 @@
 <config>
 	<modules>
 		<Comfirm_AlphaMail>
-			<version>1.1.0</version>
+			<version>1.2.0</version>
 		</Comfirm_AlphaMail>
 	</modules>
 	<frontend>
-    		<routers>
-      			<alphamail>
-  				  	<use>standard</use>
-					<args>
-						<module>Comfirm_AlphaMail</module>
-						<frontName>alphamail</frontName>
-					</args>
-      			</alphamail>
-    		</routers>
+		<routers>
+  			<alphamail>
+				  	<use>standard</use>
+				<args>
+					<module>Comfirm_AlphaMail</module>
+					<frontName>alphamail</frontName>
+				</args>
+  			</alphamail>
+		</routers>
   	</frontend>
 	<global>
 		<helpers>
@@ -36,7 +36,6 @@
                     <event_log><table>alphamail_event_log</table></event_log>
                     <send_log><table>alphamail_send_log</table></send_log>
                     <project_map><table>alphamail_project_map</table></project_map>
-                    <project><table>alphamail_project_map</table></project>
                 </entities>
             </alphamail_mysql4>
 			<core>
@@ -83,33 +82,36 @@
                     <alphamail>
                         <title>AlphaMail</title>
                         <children>
-                            <project translate="title" module="alphamail">
-                                <title>Projects</title>
-                                <action>alphamail/Project</action>
-                            </project>
-                            <template translate="title" module="alphamail">
-                                <title>Templates</title>
-                                <action>alphamail/Template</action>
-                            </template>
+                            <projectmapping translate="title" module="alphamail">
+                                <title>Project Mapping</title>
+                                <action>alphamail/ProjectMapping</action>
+                            </projectmapping>
+                            <eventlog translate="title" module="alphamail">
+                                <title>Event Log</title>
+                                <action>alphamail/EventLog</action>
+                            </eventlog>
                             <configuration translate="title" module="alphamail">
                                 <title>Configuration</title>
                                 <action>adminhtml/system_config/edit/section/alphamail</action>
-                                <children>
-		                            <projectmapping translate="title" module="alphamail">
-		                                <title>Project mapping</title>
-		                                <action>alphamail/ProjectMapping</action>
-		                            </projectmapping>
-                                </children>
                             </configuration>
-                            <logging>
-                                <title>Logging</title>
+                            <dashboard translate="title" module="alphamail">
+                                <title>» Login to Dashboard »</title>
+                                <action>alphamail/SingleSignOn</action>
                                 <children>
-		                            <eventlog translate="title" module="alphamail">
-		                                <title>Event log</title>
-		                                <action>alphamail/EventLog</action>
-		                            </eventlog>
-	                            </children>
-                            </logging>
+                                	<signatures translate="title" module="alphamail">
+		                                <title>Signatures</title>
+		                                <action>alphamail/SingleSignOn/signatures</action>
+		                            </signatures>
+		                            <tokens translate="title" module="alphamail">
+		                                <title>Tokens</title>
+		                                <action>alphamail/SingleSignOn/tokens/</action>
+		                            </tokens>
+		                            <settings translate="title" module="alphamail">
+		                                <title>Settings</title>
+		                                <action>alphamail/SingleSignOn/settings/</action>
+		                            </settings>
+                                </children>
+                            </dashboard>
                         </children>
                     </alphamail>
                 </children>

@@ -1,0 +1,7 @@
+{
+	"version": 1.0,
+	"name": "Magento - Confirm Email",
+	"description": "Mail sent when a user signs up using double opt-in",
+	"subject": "Confirm your e-mail - <# payload.site.name #>",
+	"created": 1348267936
+}

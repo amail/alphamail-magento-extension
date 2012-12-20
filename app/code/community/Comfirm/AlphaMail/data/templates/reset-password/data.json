@@ -1,0 +1,7 @@
+{
+	"version": 1.0,
+	"name": "Magento - Reset Password",
+	"description": "Mail sent when a user resets his password",
+	"subject": "Reset your password - <# payload.site.name #>",
+	"created": 1348267936
+}

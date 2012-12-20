@@ -1,5 +1,5 @@
 <?php $row_offset = 0; ?>
-<?php if($templates != null) { ?>
+<?php if(isset($templates) && $templates != null) { ?>
 	<form action="<?php echo($this->getUrl('*/*/save/')) ?>" method="post">
 		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
 		<div class="content-header">

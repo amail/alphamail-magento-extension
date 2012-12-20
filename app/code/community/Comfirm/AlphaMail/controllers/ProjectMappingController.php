@@ -58,14 +58,19 @@
 
                 // Get all mappings that exist and have changed
                 foreach($project_mappings as $project_mapping){
-                    $template_id = $project_mapping['template_name'];
-                    if(array_key_exists($template_id, $template_mappings)){
-                        $am_project_id = $template_mappings[$template_id];
-                        if($am_project_id != (int)$template_mappings['am_project_id']){
-                            $changed_mappings[$template_id] = array(
-                                'id' => (int)$project_mapping['project_map_id'],
-                                'am_project_id' => $am_project_id
-                            );
+                    $project_mapping = $project_mapping->getData();
+                    if($project_mapping != null && array_key_exists('template_name', $project_mapping)){
+                        $template_id = $project_mapping['template_name'];
+
+                        if(array_key_exists($template_id, $template_mappings)){
+                            $am_project_id = $template_mappings[$template_id];
+                            if($am_project_id != (int)$project_mapping['am_project_id'])
+                            {
+                                $changed_mappings[$template_id] = array(
+                                    'id' => (int)$project_mapping['project_map_id'],
+                                    'am_project_id' => $am_project_id
+                                );
+                            }
                         }
                     }
                 }

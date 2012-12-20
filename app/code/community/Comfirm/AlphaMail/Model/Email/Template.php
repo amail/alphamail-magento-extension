@@ -92,6 +92,9 @@
                                         ->setApiToken($token);
 
                                     $response = $email_service->queue($payload);
+
+                                    $helper->logDebug('Response = ' . json_encode($response));
+
                                     if($response->error_code == 0){
                                         $helper->logSentMessage($response->result);
                                         $helper->logDebug('Request successful. Message = \'' . $response->message . '\', Id = \'' . $response->result . '\'', $send_id);
@@ -104,26 +107,31 @@
                                 catch (AlphaMailValidationException $exception)
                                 {
                                     // Don't retry validation errors
+                                    $helper->logDebug('Validation error = ' . $exception->getMessage());
                                     $is_handled = true;
                                     break;
                                 }
                                 catch (AlphaMailAuthorizationException $exception)
                                 {
                                     // Don't retry authorization errors
+                                    $helper->logDebug('Authorization error = ' . $exception->getMessage());
                                     $is_handled = true;
                                     break;
                                 }
                                 catch (AlphaMailInternalException $exception)
                                 {
                                     // Retry internal errors..
+                                    $helper->logDebug('Internal error = ' . $exception->getMessage());
                                 }
                                 catch (AlphaMailServiceException $exception)
                                 {
                                     // Retry service exception..
+                                    $helper->logDebug('Service error = ' . $exception->getMessage());
                                 }
                                 catch(Exeption $exception)
                                 {
                                     // Retry other errors..
+                                    $helper->logDebug('Other error = ' . $exception->getMessage());
                                 }
                             }
                         }
@@ -132,6 +140,8 @@
                     $helper->logDebug("Mail sent with template '" . $template_name . "' was unhandled (not mapped).");
                 }
             }catch(Exception $exception){
+                $is_handled = false;
+                // TODO: LOG THIS EXCEPTION!!!
                 //Mage::logException($exception);
                 //$helper->logError('Exception thrown when trying to queue mail: ' . $exception->__toString(), $send_id);
             }

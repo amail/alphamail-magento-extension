@@ -1,0 +1,10 @@
+Hi!
+
+Your order #<# payload.order.order_real_id #> has been updated:
+<# payload.comment.text #>
+
+Best regards,
+<# payload.admin.first_name#>
+
+
+This message was meant for <# payload.customer.email #>

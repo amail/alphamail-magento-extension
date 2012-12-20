@@ -1,0 +1,11 @@
+Hi <# payload.customer.first_name #>!
+
+Before you can start shopping you must confirm your e-mail address. Confirm your e-mail address by clicking the button below.
+
+<# payload.confirmation.url #>
+
+Best regards,
+<# payload.site.name #>
+
+
+This message was meant for <# payload.customer.email #>

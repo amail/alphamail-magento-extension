@@ -95,6 +95,18 @@
 	        return $result;
 	    }
 
+	    // Get order item product. Written for compatibility with 1.6.0
+	    public function getOrderItemProduct($item){
+	    	$product = $item->getProduct();
+
+	    	if($product == null){
+				$product = Mage::getModel('catalog/product');
+				$product->load($product->getIdBySku($item->getSku()));
+	    	}
+
+	    	return $product;
+	    }
+
 	    public function getRecommendationData($limit_per_list, $order = null){
 	        $result = new stdClass();
 
@@ -113,9 +125,9 @@
 
 	        	// Scan for related products
 	        	foreach($order->getItemsCollection() as $item){
-	        		$product = $item->getProduct();
+	        		$product = $this->getOrderItemProduct($item);
 
-	        		// Need to clean this up, break out to sepearet function.
+	        		// Need to clean this up, break out to seperate function.
 	        		// Also optimize. E.g. products can be cached, in order to save data recommendations
 	        		// could have a products array and top selling, related, upsell, cross-sell could just be product IDs.
 	        		// Could also be a clean way to have an array of products to recommend if you just want to print some
@@ -169,33 +181,29 @@
 	        return $result;
 	    }
 
-	    /*public function getUniqueProductsFromCollection($product_lookup, $product_collection, $item_limit){
-	    	$products = array();
-
-        	// Scan for related products
-        	foreach($product_collection as $product_item){
-        		$product = $product_item->getProduct();
-        		foreach($product->getRelatedProductCollection() as $related_product){
-        			// Only include products that aren't in the order
-        			if(!array_key_exist((int)$related_product->getId(), $products_lookup)){
-	        			if(count($products) < $item_limit){
-				            $related_product->load();
-	        				$products[] = $this->getProductData($related_product);
-	        			}else{
-	        				break 2;
-	        			}
-	        		}
-        		}
-        	}
-
-        	return $products;
-	    }*/
-
 	    public function getProductItemImages($product_item){
 	        $result = new stdClass();
 
-	        $result->small = $product_item->getSmallImageUrl();
-	        $result->thumbnail = $product_item->getThumbnailUrl();
+        	// In case 'Image file was not found.' (bad way of Magneto to use generic exception)..
+        	// Just discard..
+
+	        try
+	        {
+		        $result->small = $product_item->getSmallImageUrl();
+	        }
+	        catch(Exception $exception)
+	        {
+	        	$result->small = null;
+	        }
+
+	        try
+	        {
+		        $result->thumbnail = $product_item->getThumbnailUrl();
+	        }
+	        catch(Exception $exception)
+	        {
+	        	$result->small = null;
+	        }
 
 	        return $result;
 	    }
@@ -219,13 +227,6 @@
 
 	            $product->load();
 	            $item = $this->getProductData($product);
-
-	            /*$item->product_id = (int)$product->getId();
-	            $item->name = $product->getName();
-	            $item->sku = $product->getSku();
-	            $item->url = $product->getProductUrl();
-	            $item->images = $this->getProductItemImages($product);
-	            $item->price = (float)$product->getPrice();*/
 
 	            $items[] = $item;
 	        }
@@ -251,6 +252,9 @@
 	                $item->price = Mage::helper('directory')->currencyConvert($item->price,
 	                    $base_currency_code, $current_currency_code);
 	            }
+
+				$currency = Mage::app()->getLocale()->currency($current_currency_code);
+	            $item->price_formatted = $currency->toCurrency($item->price);
 
 	            return $item;
 	    }

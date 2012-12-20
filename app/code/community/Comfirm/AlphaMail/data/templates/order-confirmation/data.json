@@ -1,0 +1,7 @@
+{
+	"version": 1.0,
+	"name": "Magento - Order Confirmation",
+	"description": "Mail sent when a user creates a new order",
+	"subject": "New order from <# payload.site.name #> (#<# payload.order.order_real_id #>)",
+	"created": 1348267936
+}

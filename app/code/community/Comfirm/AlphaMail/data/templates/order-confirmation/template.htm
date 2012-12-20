@@ -1,0 +1,546 @@
+<html>
+<head>
+</head>
+<body bgcolor="#F5F5E9" style="background:#F5F5E9;-webkit-text-size-adjust:none;margin:0;padding:0;" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<style>
+	#Wrapper {width:100%;background-color:#F5F5E9;} 
+</style>
+<div id="Empty" style="margin:0;padding:0;">
+<div id="Wrapper" style="margin:0;padding:0;">
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="614">	
+<tr bgcolor="#F5F5E9">
+	<td height="25" width="614"></td>
+</tr>
+</table>
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="614">	
+<tr bgcolor="#ffffff">
+	<td height="16" width="614">
+		<img src="http://cdn.comfirm.se/comfirm/magento/top.jpg" style="display:block" height="16" width="614">
+	</td>
+</tr>
+</table>
+
+<table valign="top" align="center" border="0" cellpadding="0" cellspacing="0" width="614">	
+<tr bgcolor="#ffffff">
+<td bgcolor="#f7f5e8" width="1"></td>
+<td bgcolor="#f5f3e7" width="1"></td>
+<td bgcolor="#f3f3e9" width="1"></td>
+<td bgcolor="#f1f1e5" width="1"></td>
+<td bgcolor="#eeefe1" width="1"></td>
+<td bgcolor="#eaebdd" width="1"></td>
+<td bgcolor="#e7e7df" width="1"></td>
+<td bgcolor="#ffffff" width="600">
+
+	<table valign="top" align="center" border="0" cellpadding="0" cellspacing="0" width="600">	
+	<tr bgcolor="#ffffff">
+		<td height="18" width="600"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">		
+	<tr bgcolor="#ffffff">
+		<td height="40" width="23"></td>
+		<td align="left" height="40" valign="middle" width="243">
+			<a data-amid="5020195ecd2d2" href="<# payload.site.base_url #>" data-amalias="Big logotype"><img src="http://cdn.comfirm.se/comfirm/magento/logo.jpg" alt="Company" title="Company" style="display: block;" editable="true" border="0" height="26" width="243"></a>
+		</td>
+		<td align="left" height="40" valign="middle" width="334"></td>
+	</tr>
+	</table>
+
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">	
+	<tr bgcolor="#ffffff">
+		<td height="27" width="600"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td align="left" valign="top" width="554">
+			<table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="554">	
+			<tr>
+				<td width="554">
+					<font style="font-family: sans-serif, Arial; font-size: 16px; color: #333B3E; line-height: 20px;"><b>Thanks for shopping with us!</b></font>
+					<br>
+					<font style="font-family: sans-serif, Arial; font-size: 14px; color: #333B3E; line-height: 20px;">We hope that you'll be pleased with your order. Below you'll find a confirmation of the things you bought.</font>
+				</td>
+			</tr>
+			<tr>
+				<td height="21" width="554"></td>
+			</tr>
+			<tr>
+				<td width="554">
+					<font style="font-family: sans-serif, Arial; font-size: 14px; color: #333B3E; line-height: 20px;">Best regards,<br>
+					<b><# payload.site.name #></b></font>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="27" width="600"></td>
+	</tr>		
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="26" width="600">				
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="3" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+		<td align="left" bgcolor="#1597cb" height="20" valign="top" width="554">
+			<font style="font-family: sans-serif, Arial; font-size: 16px; color: #ffffff; line-height: 20px;"><b>&nbsp; You have ordered</b></font>
+		</td>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="3" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	</table>
+
+
+	<#
+	$i = 0
+	while (i < payload.order.items.length) {
+	#>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="3" width="600">				
+	<tr bgcolor="#ffffff">
+		<td height="3" width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="552"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">				
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td align="center" height="75" valign="middle" width="75">
+			<img src="<# payload.order.items[i].images.thumbnail #>" style="display:block;" height="75" width="75">
+		</td>
+		<td width="15"></td>
+		<td valign="middle" width="156">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b><# payload.order.items[i].name #></b> (<a href="<# payload.order.items[i].url #>" data-amalias="Product ID" data-amid="50213df3d67a1" style="color: #009DDB; "><# payload.order.items[i].sku #></a>)</font>
+		</td>
+		<td width="15"></td>
+		<td align="right" width="150">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><# payload.order.items[i].quantity #> á <# payload.order.items[i].price_formatted #></font>
+		</td>
+		<td width="15"></td>
+		<td align="right" width="80">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b><# (payload.order.items[i].price * payload.order.items[i].quantity) " " payload.order.payment.currency.symbol #></b></font>
+		</td>
+		<td width="15"></td>
+		<td width="16">
+			<a href="http://www.facebook.com/sharer.php?u=<# urlencode%28payload.order.items[i].url%29 #>&amp;t=<# urlencode%28payload.order.items[i].name%29 #>" data-amid="50214572b36e1" data-amalias="Share on Facebook">
+				<img src="http://cdn.comfirm.se/comfirm/magento/fb.jpg" title="Share on Facebook" alt="Share on Facebook" style="display:block;" border="0" height="16" width="16">
+			</a>
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="3" width="600">				
+	<tr bgcolor="#ffffff">
+		<td height="3" width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="552"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<#
+		$i = i + 1
+	}
+	#>
+	
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="1" width="600">	
+	<tr bgcolor="#ffffff" height="1">
+		<td height="1" width="23"></td>
+		<td bgcolor="#DFDFDF" height="1" width="554"></td>
+		<td height="1" width="23"></td>
+	</tr>	
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="8" width="600"></td>
+	</tr>		
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td align="left" valign="top" width="554">
+			<table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="554">	
+			<tr>
+				<td align="right" width="450">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;">Sub amount</font>
+				</td>
+				<td align="right" width="204">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;"><# payload.order.payment.amount.sub_total_formatted #></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="450">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;">Shipping</font>
+				</td>
+				<td align="right" width="204">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;"><# payload.order.payment.amount.shipping_formatted #></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="450">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;">Tax</font>
+				</td>
+				<td align="right" width="204">
+					<font style="font-family: sans-serif,Arial; font-size: 14px; color: #333B3E; line-height: 20px;"><# payload.order.payment.amount.tax_formatted #></font>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" width="450">
+					<font style="font-family: sans-serif,Arial; font-size: 16px; color: #333B3E; line-height: 20px;"><b>Grand total</b></font>
+				</td>
+				<td align="right" width="204">
+					<font style="font-family: sans-serif,Arial; font-size: 16px; color: #333B3E; line-height: 20px;"><b><# payload.order.payment.amount.grand_total_formatted #></b></font>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="27" width="600"></td>
+	</tr>		
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td align="left" valign="top" width="554">
+			<table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="554">	
+			<tr>
+				<td width="554">
+					<font style="font-family: sans-serif, Arial; font-size: 16px; color: #333B3E; line-height: 20px;"><b>Will be delivered to</b></font>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="10" width="600"></td>
+	</tr>		
+	</table>
+
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td align="left" valign="top" width="554">
+			<table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="554">	
+			<tr>
+				<td width="270">
+					<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b>Namn:</b> <# payload.order.shipping_address.name #></font>
+				</td>
+				<td width="14"></td>
+				<td width="270">
+					<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b>Address:</b> <# payload.order.shipping_address.street[0] #></font>
+				</td>
+			</tr>
+			<tr>
+				<td width="270">
+					<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b>Postal code:</b> <# payload.order.shipping_address.region.postal_code #></font>
+				</td>
+				<td width="14"></td>
+				<td width="270">
+					<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b>City:</b> <# payload.order.shipping_address.region.city #></font>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td width="23"></td>
+	</tr>
+	</table>
+
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="27" width="600"></td>
+	</tr>		
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="26" width="600">				
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="3" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+		<td align="left" bgcolor="#1597cb" height="20" valign="top" width="554">
+			<font style="font-family: sans-serif, Arial; font-size: 16px; color: #ffffff; line-height: 20px;"><b>&nbsp; Our top selling products </b></font>
+		</td>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="3" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	</table>
+
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">				
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="77" valign="top" width="153">
+			<img src="<# payload.recommendations.topsellers[0].images.small #>" style="display: block;" height="77" width="88">
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="77" valign="top" width="153">
+			<img src="<# payload.recommendations.topsellers[1].images.small #>" style="display: block;" height="77" width="88">
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="77" valign="top" width="153">
+			<img src="<# payload.recommendations.topsellers[2].images.small #>" style="display: block;" height="77" width="88">
+		</td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;">
+				<a data-amid="502d01d219a75" href="<# payload.recommendations.topsellers[0].url #>" data-amalias="Product 1" style="color:#009DDB;"><b><# payload.recommendations.topsellers[0].name #></b></a>
+			</font>
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;">
+				<a data-amid="502d01d21c186" href="<# payload.recommendations.topsellers[1].url #>" data-amalias="Product 2" style="color:#009DDB;"><b><# payload.recommendations.topsellers[1].name #></b></a>
+			</font>
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;">
+				<a data-amid="502d01d21e893" href="<# payload.recommendations.topsellers[2].url #>" data-amalias="Product 3" style="color:#009DDB;"><b><# payload.recommendations.topsellers[2].name #></b></a>
+			</font>
+		</td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b><# payload.recommendations.topsellers[0].price_formatted #></b></font>
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b><# payload.recommendations.topsellers[1].price_formatted #></b></font>
+		</td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" valign="top" width="153">
+			<font style="font-family: sans-serif, Arial; font-size: 12px; color: #333B3E; line-height: 20px;"><b><# payload.recommendations.topsellers[2].price_formatted #></b></font>
+		</td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td width="23"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="15"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="15"></td>
+		<td align="center" height="15" valign="top" width="153"></td>
+		<td width="16"></td>
+		<td bgcolor="#DFDFDF" width="1"></td>
+		<td width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="1" width="600">	
+	<tr bgcolor="#ffffff" height="1">
+		<td height="1" width="23"></td>
+		<td bgcolor="#DFDFDF" height="1" width="554"></td>
+		<td height="1" width="23"></td>
+	</tr>	
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="15" width="600"></td>
+	</tr>		
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" height="74" width="600">				
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="15" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+		<td align="left" bgcolor="#1597cb" height="20" valign="top" width="554">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" height="74" width="554">				
+			<tr>
+				<td width="23"></td>
+				<td width="80">
+					<a data-amid="50215886817bd" href="http://www.facebook.com/comfirm" data-amalias="Like us on Facebook - Image">
+						<img src="http://cdn.comfirm.se/comfirm/magento/like.jpg" style="display: block;" editable="true" title="Like us on Facebook!" alt="Gilla us on Facebook!" border="0" height="74" width="80">
+					</a>
+				</td>
+				<td valign="middle" width="451">
+					<font style="font-family: sans-serif, Arial; font-size: 16px; color: #ffffff; line-height: 20px;"><a data-amid="5021bac7af38a" data-amalias="Like on Facebook - Text" href="http://www.facebook.com/comfirm">
+							<b>&nbsp; Like us on Facebook and get a coupon code!</b>
+						</a></font>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td bgcolor="#ffffff" height="20" width="23"></td>
+	</tr>
+	<tr>
+		<td bgcolor="#ffffff" width="23"></td>
+		<td bgcolor="#1597cb" height="15" width="554"></td>
+		<td bgcolor="#ffffff" width="23"></td>
+	</tr>
+	</table>
+	
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+	<tr bgcolor="#ffffff">
+		<td height="15" width="600"></td>
+	</tr>		
+	</table>
+</td>
+<td bgcolor="#e7e7df" width="1"></td>
+<td bgcolor="#eaebdd" width="1"></td>
+<td bgcolor="#eeefe1" width="1"></td>
+<td bgcolor="#f1f1e5" width="1"></td>
+<td bgcolor="#f3f3e9" width="1"></td>
+<td bgcolor="#f5f3e7" width="1"></td>
+<td bgcolor="#f7f5e8" width="1"></td>
+</tr>	
+</table>
+	
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="614">	
+<tr bgcolor="#ffffff">
+	<td height="16" width="614">
+		<img src="http://cdn.comfirm.se/comfirm/magento/bottom.jpg" style="display:block" height="16" width="614">
+	</td>
+</tr>
+</table>
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="614">	
+<tr bgcolor="#F5F5E9">
+	<td height="10" width="614"></td>
+</tr>
+<tr bgcolor="#F5F5E9">
+	<td width="614">
+		<center>
+			<font style="font-family: sans-serif, Arial; font-size: 10px; color: #5E5E5E; line-height: 12px;">This message was meant for <# payload.customer.email #></font>
+		</center>
+	</td>
+</tr>
+<tr bgcolor="#F5F5E9">
+	<td height="10" width="614"></td>
+</tr>
+<tr bgcolor="#F5F5E9">
+	<td height="12" width="614">
+		<center>
+			<a data-amid="501fc039decd4" href="<# payload.site.base_url #>" data-amalias="Liten logga">
+				<img src="http://cdn.comfirm.se/comfirm/magento/logo_small.jpg" alt="<# payload.site.base_url #>" title="<# payload.site.base_url #>" style="display: block;" editable="true" border="0" height="12" width="120">
+			</a>
+		</center>
+	</td>
+</tr>
+<tr bgcolor="#F5F5E9">
+	<td height="27" width="614"></td>
+</tr>
+</table>
+
+</div>
+</div>
+</body>
+</html>

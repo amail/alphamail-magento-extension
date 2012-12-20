@@ -1,0 +1,7 @@
+{
+	"version": 1.0,
+	"name": "Magento - Order update",
+	"description": "Mail sent when an order is updated",
+	"subject": "Order #<# payload.order.order_real_id #> from <# payload.site.name #> has been updated",
+	"created": 1348267936
+}

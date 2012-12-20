@@ -32,12 +32,15 @@
 			$result->reorder_url = $this->getOrderActionUrl($order_id, "reorder");
 			$result->print_url = $this->getOrderActionUrl($order_id, "print");
 
-			$result->items = $this->getOrderItemsData($order->getItemsCollection());
+			$currency_code = $order->getOrderCurrency()->getCode();
+			$currency = Mage::app()->getLocale()->currency($currency_code);
+
+			$result->items = $this->getOrderItemsData($order->getItemsCollection(), $currency);
 
 			$result->billing_address = $this->_helper->getAddressData($order->getBillingAddress());
 			$result->shipping_address = $this->_helper->getAddressData($order->getShippingAddress());
 
-			$result->payment = $this->getOrderPaymentData($order);
+			$result->payment = $this->getOrderPaymentData($order, $currency);
 
 			return $result;
 		}
@@ -46,33 +49,39 @@
 			return Mage::getUrl('sales/order/'.$action.'/', array('order_id' => $order_id));
 		}
 
-		private function getOrderPaymentData($order){
+		private function getOrderPaymentData($order, $currency){
 			$result = new stdClass();
 
 			$payment = $order->getPayment();
 			$result->payment_id = (int)$payment->getId();
 			$result->method = $payment->getMethod();
-			$result->currency = $this->getOrderCurrencyData($order);
-			$result->amount = $this->getOrderAmountData($order);
+			$result->currency = $this->getOrderCurrencyData($order, $currency);
+			$result->amount = $this->getOrderAmountData($order, $currency);
 
 			return $result;
 		}
 
-		private function getOrderItemsData($order_items){
+		private function getOrderItemsData($order_items, $currency){
 			$items = array();
 			
 			foreach($order_items as $item){
+				// Skip child items
+    			if($item->getParentItem()) continue;
+
 				$result = new stdClass();
-				$product = $item->getProduct();
-				
+
 				$result->product_id = (int)$item->getId();
 		        $result->name = $item->getName();
 		        $result->sku = $item->getSku();
 		        $result->quantity = (int)$item->getQtyOrdered();
+
+		        $product = $this->_helper->getOrderItemProduct($item);
+
 		        $result->url = $product->getProductUrl();
 		        $result->images = $this->_helper->getProductItemImages($product);
 
 		        $result->price = (float)$item->getPrice();
+		        $result->price_formatted = $currency->toCurrency($result->price);
 
 	        	$items[] = $result;
 			}
@@ -80,7 +89,7 @@
 			return $items;
 		}
 
-		private function getOrderAmountData($order){
+		private function getOrderAmountData($order, $currency){
 			$result = new stdClass();
 
 	        $result->tax = (float)$order->getTaxAmount();
@@ -89,14 +98,20 @@
 	        $result->sub_total = (float)$order->getSubtotal();
 	        $result->grand_total = (float)$order->getGrandTotal();
 
+	        $result->tax_formatted = $currency->toCurrency($result->tax);
+	        $result->shipping_formatted = $currency->toCurrency($result->shipping);
+	        $result->discount_formatted = $currency->toCurrency($result->discount);
+	        $result->sub_total_formatted = $currency->toCurrency($result->sub_total);
+	        $result->grand_total_formatted = $currency->toCurrency($result->grand_total);
+
 			return $result;
 		}
 
-		private function getOrderCurrencyData($order){
+		private function getOrderCurrencyData($order, $currency){
 			$result = new stdClass();
 
 			$result->code = $currency_code = $order->getOrderCurrency()->getCode();
-			$result->symbol = Mage::app()->getLocale()->currency($currency_code)->getSymbol();
+			$result->symbol = $currency->getSymbol();
 
 			return $result;
 		}

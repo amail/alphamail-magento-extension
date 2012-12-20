@@ -1,0 +1,11 @@
+Welcome <# payload.customer.first_name #>!
+
+Thanks for registering on <# payload.site.name #>, you can now start shopping at us.
+
+Your username: <# payload.customer.email #>
+
+Best regards,
+<# payload.site.name #>
+
+
+This message was meant for <# payload.customer.email #>
