@@ -1,19 +1,17 @@
 <_>
-   <form_key>ULbLLvqYibG0sTzj</form_key>
+   <form_key>lp2VxCYueKH5TzBy</form_key>
    <name>Comfirm_AlphaMail</name>
    <channel>community</channel>
    <version_ids>
       <version_ids>2</version_ids>
    </version_ids>
-   <summary>Transactional email module for integration with AlphaMail by Comfirm.</summary>
-   <description>The Comfirm AlphaMail extension is a transactional email extension that makes it easier to manage, send and get reports on the transactional emails in Magento.</description>
+   <summary>Transactional email module for integration with AlphaMail.</summary>
+   <description>The AlphaMail extension is a transactional email extension that makes it easier to manage, send and get reports on the transactional emails in Magento.</description>
    <license>MIT</license>
    <license_uri>http://opensource.org/licenses/MIT</license_uri>
-   <version>1.2.0</version>
+   <version>1.5.2</version>
    <stability>stable</stability>
-   <notes>- Removed template and project management.
-+ Added single sign on support.
-* Fixed issues only visible in Magento developer mode.</notes>
+   <notes>* Fixed HttpRequest class naming collision</notes>
    <authors>
       <name>
          <name>comfirm</name>
@@ -22,7 +20,7 @@
          <user>comfirm</user>
       </user>
       <email>
-         <email>robin@comfirm.se</email>
+         <email>robin.orheden@amail.io</email>
       </email>
    </authors>
    <depends_php_min>5.0.0</depends_php_min>
@@ -42,7 +40,7 @@
             <max/>
          </max>
          <files>
-            <files>                                        </files>
+            <files>                                                    </files>
          </files>
       </package>
       <extension>
@@ -64,6 +62,7 @@
          <target>magedesign</target>
          <target>mageetc</target>
          <target>magedesign</target>
+         <target>mageskin</target>
       </target>
       <path>
          <path/>
@@ -71,6 +70,7 @@
          <path>adminhtml/default/default/template/alphamail</path>
          <path>modules/Comfirm_AlphaMail.xml</path>
          <path>adminhtml/default/default/layout/alphamail.xml</path>
+         <path>adminhtml/default/default/alphamail</path>
       </path>
       <type>
          <type>file</type>
@@ -78,8 +78,10 @@
          <type>dir</type>
          <type>file</type>
          <type>file</type>
+         <type>dir</type>
       </type>
       <include>
+         <include/>
          <include/>
          <include/>
          <include/>
@@ -92,10 +94,7 @@
          <ignore/>
          <ignore/>
          <ignore/>
+         <ignore/>
       </ignore>
    </contents>
-   <page>1</page>
-   <limit>200</limit>
-   <folder/>
-   <package/>
 </_>

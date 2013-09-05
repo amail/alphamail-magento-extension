@@ -3,11 +3,15 @@
     include_once(Mage::getBaseDir() . "/app/code/community/Comfirm/AlphaMail/libraries/comfirm.alphamail.client/emailservice.class.php");
 
     class Comfirm_AlphaMail_Model_Email_Template extends Mage_Core_Model_Email_Template {
-    	
+
         public function send($email, $name=null, array $variables = array()) {
+            $send_log_id = null;
             $helper = Mage::helper('alphamail');
+            $is_unhandled = false;
             
-            try{
+            try
+            {
+                // Plugin is not activated. Pass call to parent.
                 if(!$helper->isActivated()){
                      return parent::send($email, $name, $variables);
                 }
@@ -17,58 +21,25 @@
                 $subject = $this->getTemplateSubject();
                 $token = $helper->getAuthenticationToken();
                 $server_url = $helper->getPrimaryServerUrl();
-
-                // If payload name is set, replace original name with this.
-                if($name == null || strlen($payload->name) == 0){
-                    if($payload->name != null){
-                        $name = $payload->name;
-                    }
-                }
-
+                  
                 $project_map_model = Mage::getModel('alphamail/project_map');
                 $project_map = $project_map_model->getByTemplateName($template_name);
 
                 if($project_map != null){
-                    $send_id = null;
                     $project_id = (int)$project_map['am_project_id'];
-                    if($project_id > 0){
-                        $message = null;
 
-                        switch($template_name){
-                            case 'customer_create_account_email_template':
-                            case 'customer_create_account_email_confirmed_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Welcome();
-                                break;
-                            case 'customer_create_account_email_confirmation_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Email_Confirmation();
-                                break;
-                            case 'customer_password_forgot_email_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Password_Renewal();
-                                break;
-                            case 'sales_email_order_template':
-                            case 'sales_email_order_guest_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Sales_Order();
-                                break;
-                            case 'sales_email_order_comment_template':
-                            case 'sales_email_order_comment_guest_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Update();
-                                break;
-                            case 'sales_email_invoice_template':
-                            case 'sales_email_invoice_guest_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Invoice();
-                                break;
-                            case 'sales_email_invoice_comment_template':
-                            case 'sales_email_invoice_comment_guest_template':
-                                $message = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Invoice_Update();
-                                break;
-                        }
+                    $send_log = $helper->createSendLog($template_name);
+                    $send_log_id = $send_log->getId();
+                    
+                    if($project_id > 0){
+                        $message = $this->getMessageObject($template_name);
 
                         if($message != null){
                             $body_object = $message->load($variables);
                             
                             $name = is_array($name) ? $name[0] : $name;
                             $email = is_array($email) ? $email[0] : $email;
-                            
+
                             // Build payload
                             $payload = EmailMessagePayload::create()
                                 ->setProjectId($project_id)
@@ -81,10 +52,10 @@
                                 $payload->setReceiverId($body_object->customer->customer_id);
                             }
                             
-                            $helper->logDebug(json_encode($body_object));
-                            $helper->logDebug('Payload built. Data = ' . json_encode($payload) . '.', $send_id);
+                            $max_retries = max($helper->getFailureRetryCount(), 1);
+                            $helper->logDebug('Payload = ' . json_encode($payload), $send_log_id);
 
-                            for($retry=max($helper->getFailureRetryCount(), 1);$retry>0;--$retry){
+                            for($retry=$max_retries;$retry>0;--$retry){
                                 try
                                 {
                                     $email_service = AlphaMailEmailService::create()
@@ -92,69 +63,72 @@
                                         ->setApiToken($token);
 
                                     $response = $email_service->queue($payload);
-
-                                    $helper->logDebug('Response = ' . json_encode($response));
+                                    $helper->logDebug('Response = ' . json_encode($response), $send_log_id);
 
                                     if($response->error_code == 0){
-                                        $helper->logSentMessage($response->result);
-                                        $helper->logDebug('Request successful. Message = \'' . $response->message . '\', Id = \'' . $response->result . '\'', $send_id);
-                                        $is_handled = true;
-
-                                        // Successful! Let's end here :)
+                                        $is_unhandled = false;
+                                        $helper->flagSendLogAsSent($send_log, $response->result);
                                         break;
                                     }
                                 }
+                                // Don't retry validation errors
                                 catch (AlphaMailValidationException $exception)
                                 {
-                                    // Don't retry validation errors
-                                    $helper->logDebug('Validation error = ' . $exception->getMessage());
-                                    $is_handled = true;
+                                    $helper->logDebug('Validation error = ' . $exception->getMessage(), $send_log_id);
                                     break;
                                 }
+                                // Don't retry authorization errors
                                 catch (AlphaMailAuthorizationException $exception)
                                 {
-                                    // Don't retry authorization errors
-                                    $helper->logDebug('Authorization error = ' . $exception->getMessage());
-                                    $is_handled = true;
+                                    $helper->logDebug('Authorization error = ' . $exception->getMessage(), $send_log_id);
+                                    if($retry == 1){
+                                        $helper->flagSendLogAsAuthenticationError($send_log, json_encode($payload));
+                                    }
                                     break;
                                 }
+                                // Retry internal errors..
                                 catch (AlphaMailInternalException $exception)
                                 {
-                                    // Retry internal errors..
-                                    $helper->logDebug('Internal error = ' . $exception->getMessage());
+                                    $helper->logDebug('Internal error = ' . $exception->getMessage() . ' (retry ' . ($max_retries-$retry) . ')', $send_log_id);
                                 }
+                                // Retry service exception..
                                 catch (AlphaMailServiceException $exception)
                                 {
-                                    // Retry service exception..
-                                    $helper->logDebug('Service error = ' . $exception->getMessage());
+                                    $helper->logDebug('Service error = ' . $exception->getMessage() . ' (retry ' . ($max_retries-$retry) . ')', $send_log_id);
+                                    if($retry == 1){
+                                        $helper->flagSendLogAsConnectionError($send_log, json_encode($payload));
+                                    } 
                                 }
+                                // Retry other errors..
                                 catch(Exeption $exception)
                                 {
-                                    // Retry other errors..
-                                    $helper->logDebug('Other error = ' . $exception->getMessage());
+                                    $helper->logDebug('Other error = ' . $exception->getMessage() . ' (retry ' . ($max_retries-$retry) . ')', $send_log_id);
                                 }
                             }
                         }
                     }
-                }else{
+                }
+                else
+                {
+                    $is_unhandled = true;
                     $helper->logDebug("Mail sent with template '" . $template_name . "' was unhandled (not mapped).");
                 }
-            }catch(Exception $exception){
-                $is_handled = false;
-                // TODO: LOG THIS EXCEPTION!!!
-                //Mage::logException($exception);
-                //$helper->logError('Exception thrown when trying to queue mail: ' . $exception->__toString(), $send_id);
+            }
+            catch(Exception $exception)
+            {
+                $is_unhandled = true;
+                $helper->logError('Exception thrown when trying to queue mail: ' . $exception->__toString(), $send_log_id);
             }
 
             try
             {
-                if(!$is_handled){
+                if($is_unhandled){
                     switch(Mage::helper('alphamail')->getFallbackMode()){
                         case 'defer':
-                            // Save in message log..
+                            // Save in message log...
                             break;
                         case 'discard':
-                            // Just throw away..
+                            // Just throw away...
                             break;
                         case 'exception':
                             // Throw an exception...
@@ -171,6 +145,41 @@
             }
 
             return true;
+        }
+
+        private function getMessageObject($template_name){
+            $result = null;
+
+            switch($template_name){
+                case 'customer_create_account_email_template':
+                case 'customer_create_account_email_confirmed_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Welcome();
+                    break;
+                case 'customer_create_account_email_confirmation_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Email_Confirmation();
+                    break;
+                case 'customer_password_forgot_email_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Password_Renewal();
+                    break;
+                case 'sales_email_order_template':
+                case 'sales_email_order_guest_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Sales_Order();
+                    break;
+                case 'sales_email_order_comment_template':
+                case 'sales_email_order_comment_guest_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Update();
+                    break;
+                case 'sales_email_invoice_template':
+                case 'sales_email_invoice_guest_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Invoice();
+                    break;
+                case 'sales_email_invoice_comment_template':
+                case 'sales_email_invoice_comment_guest_template':
+                    $result = new Comfirm_AlphaMail_Message_Customer_Sales_Order_Invoice_Update();
+                    break;
+            }
+
+            return $result;
         }
     }
 

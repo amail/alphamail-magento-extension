@@ -37,14 +37,14 @@
     include_once("filters/basicauthenticationfilterchainitem.class.php");
     include_once("filters/jsondeserializerchainitem.class.php");
 
-	interface IHttpRequest
+	interface IAlphaMailHttpRequest
 	{
         function addInboundFilter(IHttpInboundFilterChainItem $item);
 	    function addOutboundFilter(IHttpOutboundFilterChainItem $item);
 		function create($method, $url, IHttpHeaderCollection $headers, $body);
 	}
 
-	class HttpRequest
+	class AlphaMailHttpRequest
 	{
 		private $_parser = null;
 	    private $_inbound_filter_manager = null, $_outbound_filter_manager = null;

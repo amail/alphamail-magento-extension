@@ -1,47 +1,225 @@
-<?php $row_offset = 0; ?>
-<?php if(isset($templates) && $templates != null) { ?>
-	<form action="<?php echo($this->getUrl('*/*/save/')) ?>" method="post">
-		<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
-		<div class="content-header">
-		    <table cellspacing="0">
-		        <tr>
-		            <td><h3>Edit Project Mappings</h3></td>
-		            <td class="form-buttons">
-		                <button type="button" class="scalable save" onclick="submit();">
-		                    <span>Save Project Mappings</span>
-		                </button>
-		            </td>
-		         </tr>
-		    </table>
-		</div>
-		<div class="grid">
-		    <div class="hor-scroll">
-				<table cellspacing="0" class="data" id="cmsBlockGrid_table">
-					<thead>
-						<tr class="headings">
-							<th><span class="nobr">Magento Template</span></th>
-							<th style='width:75%;'><span class="nobr">AlphaMail Project</span></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach($templates as $template_id => $template){ ++$row_offset; ?>
-							<tr class="<?php echo($row_offset % 2 == 0 ? 'odd' : 'even') ?> ">
-								<td class="a-left"><?php echo($this->htmlEscape($template['title'])) ?></td>
-								<td class="a-left">
-									<select name="<?php echo($template_id) ?>_project_id">
-										<option value="-1">-- Not selected ---------------------------</option>
-										<?php foreach($projects as $project){ ?>
-											<option value="<?php echo($project->id) ?>"<?php if($template['selected_id'] == $project->id){ echo('selected'); } ?>>
-												<?php echo($this->htmlEscape($project->name)) ?>
-											</option>
-										<?php } ?>
-									</select>
-								</td>
-							</tr>
-						<?php } ?>
-					</tbody>
-			    </table>
-		    </div>
-		</div>
-	</form>
+<?php if(isset($projects) && isset($messages)){ ?>
+    <script src="<?php echo($this->getSkinUrl("alphamail/jquery-1.9.1.js")) ?>"></script>
+    <script src="<?php echo($this->getSkinUrl("alphamail/jquery-ui.js")) ?>"></script>
+
+    <style>
+        div#mapping .box-inner {
+            background-color: #fff;
+            text-align: center;
+            vertical-align: middle;
+            display: table-cell;
+            height:100px;
+            width:100px;
+            border: 1px dashed #c0c0c0;
+            border-radius: 4px;
+        }
+
+        div#mapping .box-inner.map-item {
+            cursor: move;
+            border: 1px solid #101010;
+        }
+
+        div#mapping .box {
+            border: 0px;
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            float: left;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 10px;
+        }
+
+        div#mapping .box-inner.active {
+            border: 1px solid #c0c0c0;
+        }
+
+        div#mapping .box.active div {
+            color: #101010;
+            background-color: #f0f0f0;
+        }
+
+        div#mapping * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        div#mapping p {
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        div#mapping .drop-target .active {
+            color: #101010;
+            border: 1px solid #101010;
+            cursor: pointer;
+        }
+
+        div#mapping .drop-target .enable {
+            color: #101010;
+            cursor: pointer;
+        }
+
+        div#mapping .drop-target:hover .active {
+            background-color: #f0f0f0;
+        }
+    </style>
+
+    <script>
+        var $jq = jQuery.noConflict();
+
+        function saveProjectMappings(button){
+            var mappings = {};
+
+            button.addClassName("disabled");
+            button.innerHTML = "<span>Please wait...</span>";
+
+            $jq(".drop-target .map-item").each(function(){
+                var messageId = $jq(this).parent().data('message-id');
+                var projectId = $jq(this).data('project-id');
+                mappings[messageId] = projectId;
+            });
+
+            $jq("input[name='mappings']").val(JSON.stringify(mappings));
+            $jq(button).closest("form").submit();
+
+            return false;
+        }
+
+        $jq(function(){
+            var droppableClicks = 0;
+
+            $jq(".map-item")
+                .draggable({
+                    opacity: .4,
+                    helper: 'clone',
+                    start: function(event, ui){
+                        droppableClicks = 0;
+                        $jq(".drop-target > .box-inner").addClass("enable");
+                        $jq(ui.helper).addClass("cloned");
+                        $jq(ui.helper).children().remove();
+                    },
+                    stop: function(event, ui){
+                        $jq(".drop-target *").removeClass("enable");
+                    },
+                    create: function(){
+                        $jq(this).data('position', $jq(this).position());
+                    },
+                    revert: function(valid) {
+                        return !valid;
+                    }
+                });
+
+            $jq(".drop-target > .draggable").click(function(){
+                if($jq(this).hasClass("draggable")){
+                    $jq(this)
+                        .html("<div class=\"box-inner\" style=\"color: #c0c0c0;\"><p>" + $jq(this).parent().data('template-name') + "</p></div>")
+                        .removeClass("draggable")
+                        .removeClass("map-item")
+                        .removeClass("box-inner")
+                        .removeClass("ui-draggable")
+                        .removeClass("active");
+
+                    $jq(".box-inner", this).removeClass("active");
+                }
+            });
+
+            $jq(".drop-target")
+                .droppable({
+                    greedy: true,
+                    tolerance: 'intersect',
+                    drop: function(event, ui){
+                        var outerScope = this;
+
+                        if(++droppableClicks > 1){
+                            return false;
+                        }
+
+                        var cloned = ui.draggable.clone();
+                        cloned.addClass("active");
+
+                        $jq(cloned).prepend('<div style="position:relative;top:-29px;background-color: #101010;color:#fff;">Connected</div>');
+
+                        cloned.click(function(){
+                            if($jq(this).hasClass("draggable")){
+                                $jq(this)
+                                    .html("<div class=\"box-inner\" style=\"color: #c0c0c0;\"><p>" + $jq(this).parent().data('template-name') + "</p></div>")
+                                    .removeClass("draggable")
+                                    .removeClass("map-item")
+                                    .removeClass("box-inner")
+                                    .removeClass("ui-draggable")
+                                    .removeClass("active");
+
+                                $jq(".box-inner", this).removeClass("active");
+                            }
+                        });
+                        
+                        $jq(event.target).html(cloned);
+                        return true;
+                    },
+                    over: function(event, ui) {
+                        $jq(".box-inner", this).addClass('active');
+                    },
+                    out: function(event, ui) {
+                        $jq(".box-inner", this).removeClass('active');
+                        $jq(this).droppable('option', 'accept', '.draggable');
+                    }
+                });
+        });
+    </script>
+
+    <form action="<?php echo($this->getUrl('*/*/save/')) ?>" method="post">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+        <input name="mappings" type="hidden" value="{}">
+
+        <div class="content-header">
+            <table cellspacing="0">
+                <tr>
+                    <td><h3>Edit AlphaMail Mappings</h3></td>
+                    <td class="form-buttons">
+                        <button type="button" class="scalable save" onclick="saveProjectMappings(this);">
+                            <span>Save Project Mappings</span>
+                        </button>
+                    </td>
+                 </tr>
+            </table>
+        </div>
+
+        <div id="mapping">
+            <h3>AlphaMail Projects</h3>
+
+            <?php foreach($projects as $project){ ?>
+                <div class="box">
+                    <div class="draggable map-item box-inner" data-project-id="<?php echo($project->id) ?>">
+                        <p><?php echo($this->htmlEscape($project->name)) ?></p>
+                    </div>
+                </div>
+            <?php } ?>
+
+            <br style="clear: both;" />
+            <h3>Magento Emails</h3>
+
+            <?php foreach($messages as $message_id => $message){ ?>
+                <div class="drop-target box" data-message-id="<?php echo($message_id) ?>" data-template-name="<?php echo($this->htmlEscape($message['title'])) ?>">
+                    <?php if($message["am_project_id"] != null){ ?>
+                        <div class="draggable map-item box-inner ui-draggable active" data-project-id="<?php echo($message["am_project_id"]) ?>">
+                            <div style="position:relative;top:-29px;background-color: #101010;color:#fff;">Connected</div>
+                            <p><?php echo($this->htmlEscape($projects[$message['am_project_id']]->name)) ?></p>
+                        </div>
+                    <?php }else{ ?>
+                        <div class="box-inner" style="color: #c0c0c0;">
+                            <p><?php echo($this->htmlEscape($message['title'])) ?></p>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
+    </form>
+<?php }else{ ?>
+    <p>Unable to login. Please go to your AlphaMail configuration and enter a valid token.</p>
 <?php } ?>

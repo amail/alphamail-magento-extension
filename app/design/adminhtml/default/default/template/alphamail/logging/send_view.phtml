@@ -1,0 +1,27 @@
+<?php
+/**
+ *
+ *
+ * @author Ashley Schroder (aschroder.com)
+ * @copyright  Copyright (c) 2010 Ashley Schroder
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php if($log = $this->getLogData()): ?>
+    <div class="page-head">
+        <h3><?php echo $this->__('Send Details') ?></h3>
+    </div>
+    <div class="log-detail">
+	    <p><strong><?php echo $this->__('Queue Id:') ?></strong> <?php echo $log->getAmQueueId(); ?></p>
+	    <p><strong><?php echo $this->__('Status:') ?></strong> <?php echo $log->getStatus(); ?></p>
+        <p><strong><?php echo $this->__('Sent:') ?></strong> <?php echo $log->getSentAt(); ?></p>
+        <p><strong><?php echo $this->__('Created:') ?></strong> <?php echo $log->getCreatedAt(); ?></p>
+	    <p><strong><?php echo $this->__('Raw Payload:') ?></strong></p>
+	    <div>
+	    <?php echo $log->getRawPayload(); ?>
+	    </div>
+	      
+    </div>
+    <br/>
+    <div class="button-set"><a href="<?php echo $this->getBackUrl() ?>" class="left">&laquo; <?php echo $this->__('Back to Send Log') ?></a></div><br />
+<?php endif; ?>

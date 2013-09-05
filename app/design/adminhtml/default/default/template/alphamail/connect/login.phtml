@@ -1,0 +1,80 @@
+<script type="text/javascript">
+    var loginForm = null;
+
+    function submitLoginForm(button){
+        if(loginForm && loginForm.validator.validate()){
+            button.addClassName("disabled");
+            button.innerHTML = "<span>Please wait...</span>";
+            loginForm.submit();
+        }
+    }
+
+    (function() {
+        var initializeLoginForm = function() {
+            loginForm = new VarienForm('alphamail-login-form', true);
+        };
+        if(document.loaded){
+            initializeLoginForm();
+        }else{
+            document.observe('dom:loaded', initializeLoginForm);
+        }
+    })();
+</script>
+
+<form id="alphamail-login-form" action="<?php echo($this->getUrl('*/*/TryLogin/')) ?>" method="post">
+	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+	<div id="page:main-container">
+		<div class="content-header">
+            <table cellspacing="0">
+                <tr>
+                    <td><h3>Connect your AlphaMail Account</h3></td>
+                    <td class="form-buttons">
+                        <button type="button" class="scalable back" onclick="history.back();">
+                            <span>Back</span>
+                        </button>
+                        <button type="button" class="scalable save" onclick="submitLoginForm(this);">
+                            <span>Connect Account</span>
+                        </button>
+                    </td>
+                 </tr>
+            </table>
+		</div>
+        <div class="entry-edit">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend">Login Details</h4>
+                <div class="form-buttons">
+                </div>
+            </div>
+            <div class="fieldset fieldset-wide" id="base_fieldset">
+                <div class="hor-scroll">
+                    <table cellspacing="0" class="form-list">
+                        <tbody>
+                            <tr>
+                                <td class="label">
+                                    <label for="username">Username/Email&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="username" name="username" value="<?php echo($username) ?>" title="Username" type="text" class="input-text required-entry" placeholder="e.g. your@email.com">
+                                    <?php if(array_key_exists("username", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-username" style=""><?php echo($errors["username"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label for="password">Password&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="password" name="password" value="<?php echo($password) ?>" title="Password" type="password" class="input-text required-entry">
+                                    <?php if(array_key_exists("password", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-password" style=""><?php echo($errors["password"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+	</div>
+</form>

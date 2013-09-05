@@ -3,37 +3,98 @@
     include_once(Mage::getBaseDir() . "/app/code/community/Comfirm/AlphaMail/libraries/comfirm.alphamail.client/projectservice.class.php");
 
     class Comfirm_AlphaMail_ProjectMappingController extends Comfirm_AlphaMail_Controller_Abstract {
+
+        const STATE_UNMODIFIED = 0;
+        const STATE_MODIFIED = 1;
+        const STATE_NOT_CREATED = 2;
+        const STATE_DELETED = 3;
+
+        private static $_messages = array(
+            "customer-created" => array(
+                "title" => "Customer Created",
+                "templates" => array(
+                    "customer_create_account_email_template",
+                    "customer_create_account_email_confirmed_template"
+                )
+            ),
+            "customer-verify-email" => array(
+                "title" => "Customer Verify Email",
+                "templates" => array(
+                    "customer_create_account_email_confirmation_template"
+                )
+            ),
+            "customer-reset-password" => array(
+                "title" => "Customer Reset Password",
+                "templates" => array(
+                    "customer_password_forgot_email_template"
+                )
+            ),
+            "order-created" => array(
+                "title" => "Order Created",
+                "templates" => array(
+                    "sales_email_order_template",
+                    "sales_email_order_guest_template"
+                )
+            ),
+            "order-updated" => array(
+                "title" => "Order Updated",
+                "templates" => array(
+                    "sales_email_order_comment_template",
+                    "sales_email_order_comment_guest_template"
+                )
+            ),
+            "invoice-created" => array(
+                "title" => "Invoice Created",
+                "templates" => array(
+                    "sales_email_invoice_template",
+                    "sales_email_invoice_guest_template"
+                )
+            ),
+            "invoice-updated" => array(
+                "title" => "Invoice Created",
+                "templates" => array(
+                    "sales_email_invoice_comment_template",
+                    "sales_email_invoice_comment_guest_template"
+                )
+            )
+        );
         
     	public function indexAction() {
             try
             {
-                $templates = array();
                 $this->loadLayout()->_setActiveMenu('system/tools');
 
                 $project_service = AlphaMailProjectService::create()
                     ->setServiceUrl($this->_getHelper()->getPrimaryServerUrl())
                     ->setApiToken($this->_getHelper()->getAuthenticationToken());
-               
-                $projects = $project_service->getAll();
-                $email_templates = $this->_getHelper()->getDefaultCoreTemplates();
+                
+                $projects = array();
+                $messages = self::$_messages;
                 $project_mappings = Mage::getModel('alphamail/Project_Map')->getCollection();
 
-                foreach($email_templates as $template_id => $template){
-                    $templates[$template_id] = array('title' => $template['label'], 'selected_id' => -1);
+                foreach($project_service->getAll() as $project){
+                    $projects[(int)$project->id] = $project;
+                }
+
+                foreach($messages as $message_id => $message){
+                    $messages[$message_id]["am_project_id"] = null;
                 }
 
                 foreach($project_mappings as $project_map){
                     $project_map = $project_map->getData();
-                    if(array_key_exists($project_map['template_name'], $templates)){
-                        $am_project_id = (int)$project_map['am_project_id'];
-                        if($am_project_id > 0){
-                            $templates[$project_map['template_name']]['selected_id'] = $am_project_id;
+                    foreach($messages as $message_id => $message){
+                        if(in_array($project_map['template_name'], $message["templates"])){
+                            $am_project_id = (int)$project_map['am_project_id'];
+                            if(array_key_exists($am_project_id, $projects)){
+                                $messages[$message_id]["am_project_id"] = $am_project_id;
+                                break;
+                            }
                         }
                     }
                 }
 
                 $this->_initialAction('projectMapping', 'index', array(
-                        'templates' => $templates,
+                        'messages' => $messages,
                         'projects' => $projects
                     )
                 );
@@ -49,64 +110,63 @@
         }
 
         public function saveAction() {
-            try
-            {
-                $changed_mappings = array();
-                
-                $project_mappings = Mage::getModel('alphamail/Project_Map')->getCollection();
-                $template_mappings = $this->_getRequestTemplateMappings();
+            $changes = array();
+            $existing_map = array();
+            $template_mappings = $this->_getRequestTemplateMappings();
 
-                // Get all mappings that exist and have changed
-                foreach($project_mappings as $project_mapping){
-                    $project_mapping = $project_mapping->getData();
-                    if($project_mapping != null && array_key_exists('template_name', $project_mapping)){
-                        $template_id = $project_mapping['template_name'];
+            foreach(Mage::getModel('alphamail/Project_Map')->getCollection() as $item){
+                $data = $item->getData();
+                $existing_map[$data["template_name"]] = array(
+                    "project_map_id" => (int)$data["project_map_id"],
+                    "am_project_id" => (int)$data["am_project_id"],
+                    "state" => self::STATE_UNMODIFIED
+                );
+            }
 
-                        if(array_key_exists($template_id, $template_mappings)){
-                            $am_project_id = $template_mappings[$template_id];
-                            if($am_project_id != (int)$project_mapping['am_project_id'])
-                            {
-                                $changed_mappings[$template_id] = array(
-                                    'id' => (int)$project_mapping['project_map_id'],
-                                    'am_project_id' => $am_project_id
-                                );
-                            }
-                        }
-                    }
-                }
-
-                // Get all new mappings that does not exist but has been changed
-                foreach($template_mappings as $template_id => $am_project_id){
-                    if($am_project_id > 0 && !array_key_exists($template_id, $changed_mappings)){
-                        $changed_mappings[$template_id] = array(
-                            'id' => -1,
-                            'am_project_id' => $am_project_id
-                        );
-                    }
-                }
-
-                foreach($changed_mappings as $template_id => $mapping_data){
-                    $model = Mage::getModel('alphamail/Project_Map');
-                    
-                    if($mapping_data['id'] > 0){
-                        // Entity exists.. Update!
-                        $model->load($mapping_data['id']);
-                    }else{
-                        // Entity does not exist.. Create!
-                        $model->setTemplateName($template_id);
-                    }
-
-                    $model->setAmProjectId($mapping_data['am_project_id'])
-                        ->save();
+            foreach($template_mappings as $template_name => $project_id){
+                $project_id = (int)$project_id;
+                if(array_key_exists($template_name, $existing_map)){
+                    $changes[$template_name] = array(
+                        "project_map_id" => $existing_map[$template_name]["project_map_id"],
+                        "am_project_id" => $project_id,
+                        "state" => $existing_map[$template_name]["am_project_id"] != $project_id
+                            ? self::STATE_MODIFIED : self::STATE_UNMODIFIED
+                    );
+                }else{
+                    $changes[$template_name] = array(
+                        "am_project_id" => $project_id,
+                        "state" => self::STATE_NOT_CREATED
+                    );
                 }
             }
-            catch(AlphaMailValidationException $exception)
-            {
-                $this->_addErrorMessage("Validation error: " . $exception->getMessage());
+
+            foreach($existing_map as $template_name => $data){
+                if(!array_key_exists($template_name, $template_mappings)){
+                    $data["state"] = self::STATE_DELETED;
+                    $changes[$template_name] = $data;
+                }
             }
-            catch(Exception $exception)
-            {
-                $this->_addErrorMessage("An error occurred: " . $exception->getMessage());
+
+            foreach($changes as $template_name => $change){
+                $state = $change["state"];
+
+                if($state == self::STATE_UNMODIFIED){
+                    continue; // NOP
+                }
+
+                $model = Mage::getModel('alphamail/Project_Map');
+
+                if($state != self::STATE_NOT_CREATED){
+                    $model->setId($change["project_map_id"]);
+                }
+
+                if($state == self::STATE_DELETED){
+                    $model->delete();
+                }else{
+                    $model->setAmProjectId($change["am_project_id"]);
+                    $model->setTemplateName($template_name);
+                    $model->save();
+                }
             }
 
             $this->_redirectReferer();
@@ -115,27 +175,17 @@
         private function _getRequestTemplateMappings(){
             $result = array();
 
-            foreach($this->getRequest()->getParams() as $key=>$value) {
-                if($this->_endsWith($key, '_project_id')){
-                    $template_id = substr($key, 0, strlen($key)-11);
-                    $result[$template_id] = (int)$value;
+            $parameters = $this->getRequest()->getParams();
+            $mappings = json_decode($parameters["mappings"]);
+
+            foreach($mappings as $message_name => $project_id){
+                foreach(self::$_messages[$message_name]["templates"] as $template_name){
+                    $result[$template_name] = (int)$project_id;
                 }
             }
 
             return $result;
-        }
-
-        private function _endsWith($haystack, $needle)
-        {
-            $length = strlen($needle);
-
-            if ($length == 0) {
-                return true;
-            }
-
-            $start  = $length * -1; //negative
-            return (substr($haystack, $start) === $needle);
-        }
+        } 
     }
 
 ?>

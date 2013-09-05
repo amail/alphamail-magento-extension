@@ -43,8 +43,8 @@
 
 	            $result->group = $this->getCustomerGroupData($customer);
 
-	            if($customer->getPrimaryAddress() != null){
-	                $result->address = $this->getAddressData($customer->getPrimaryAddress());
+	            if($customer->getPrimaryAddress(null) != null){
+	                $result->address = $this->getAddressData($customer->getPrimaryAddress(null));
 	            }
 	        }
 

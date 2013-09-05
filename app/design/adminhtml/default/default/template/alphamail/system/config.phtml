@@ -1,5 +1,6 @@
 <?php if($this->isAlphaMailSection()){ ?>
 	<?php
+        $admin_helper = Mage::helper("adminhtml");
 		list($error_code, $message) = Mage::helper('alphamail/diagnostic')->tryAuthenticateWithToken(
 			Mage::helper('alphamail')->getPrimaryServerUrl(),
 			Mage::helper('alphamail')->getAuthenticationToken());
@@ -35,6 +36,9 @@
 		document.observe('dom:loaded', function(){
 			// Enable/disable input/controls to reflect plugin enabled state
 			var element = $$("select#alphamail_general_activated")[0];
+			var connectInfoElement = $$("span#alphamail_config_connect_info")[0];
+
+			connectInfoElement.update("Connect your account by manually entering a token above or by <a href='<?php echo($admin_helper->getUrl("alphamail/Connect/Register")) ?>'>registering a new account</a> or <a href='<?php echo($admin_helper->getUrl("alphamail/Connect/Login")) ?>'>signing in</a>.");
 
 			var changeEnabledStateCallback = function(){
 				setFormEnabledState(this);

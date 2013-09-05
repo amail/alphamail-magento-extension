@@ -2,19 +2,19 @@
 <config>
 	<modules>
 		<Comfirm_AlphaMail>
-			<version>1.2.0</version>
+			<version>1.5.2</version>
 		</Comfirm_AlphaMail>
 	</modules>
 	<frontend>
-		<routers>
-  			<alphamail>
-				  	<use>standard</use>
-				<args>
-					<module>Comfirm_AlphaMail</module>
-					<frontName>alphamail</frontName>
-				</args>
-  			</alphamail>
-		</routers>
+    		<routers>
+      			<alphamail>
+  				  	<use>standard</use>
+					<args>
+						<module>Comfirm_AlphaMail</module>
+						<frontName>alphamail</frontName>
+					</args>
+      			</alphamail>
+    		</routers>
   	</frontend>
 	<global>
 		<helpers>
@@ -40,9 +40,7 @@
             </alphamail_mysql4>
 			<core>
 				<rewrite>
-					<!--<email>Comfirm_AlphaMail_Model_Email</email>-->
 					<email_template>Comfirm_AlphaMail_Model_Email_Template</email_template>
-					<!--<email_template_filter>Comfirm_AlphaMail_Model_Email_Template_Filter</email_template_filter>-->
 				</rewrite>
 			</core>
 		</models>
@@ -86,14 +84,23 @@
                                 <title>Project Mapping</title>
                                 <action>alphamail/ProjectMapping</action>
                             </projectmapping>
-                            <eventlog translate="title" module="alphamail">
-                                <title>Event Log</title>
-                                <action>alphamail/EventLog</action>
-                            </eventlog>
                             <configuration translate="title" module="alphamail">
                                 <title>Configuration</title>
                                 <action>adminhtml/system_config/edit/section/alphamail</action>
                             </configuration>
+                            <logging translate="title" module="alphamail">
+                                <title>System Logs</title>
+                                <children>
+                                    <sendlog translate="title" module="alphamail">
+                                        <title>Send Log</title>
+                                        <action>alphamail/SendLog</action>
+                                    </sendlog>
+                                    <errorlog translate="title" module="alphamail">
+                                        <title>Event Log</title>
+                                        <action>alphamail/EventLog</action>
+                                    </errorlog>
+                                </children>
+                            </logging>
                             <dashboard translate="title" module="alphamail">
                                 <title>» Login to Dashboard »</title>
                                 <action>alphamail/SingleSignOn</action>
@@ -151,7 +158,7 @@
 				<logging_mode>0</logging_mode>
 			</debugging>
 			<system>
-				<primary_address>api.amail.io</primary_address>
+				<primary_address>api.amail.io,api.fb1.amail.io,api.fb2.amail.io,api.fb3.amail.io,api.fb4.amail.io,api.fb5.amail.io</primary_address>
 				<fallback_mode>native</fallback_mode>
 				<number_of_retries>3</number_of_retries>
 			</system>

@@ -78,6 +78,8 @@
                     ->setApiToken($token)
                     ->getAll();
 
+                // Need to cache the authentication here
+
                 $result = array(0, 'Authentication was successful, token is valid!');
             }
             catch(AlphaMailAuthorizationException $exception)

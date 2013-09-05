@@ -63,7 +63,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>Token used to authenticate against AlphaMail services.<![CDATA[<span id="alphamail_general_authentication_token_status"></span>]]></comment>
+                            <comment>Token used to authenticate against AlphaMail services. <![CDATA[<span id="alphamail_config_connect_info"></span>]]></comment>
                         </token>
                     </fields>
                 </authentication>
@@ -124,7 +124,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>Number or retries before entering fallback mode. E.g. retries can be due to bad network connection or other </comment>
+                            <comment>Number or retries before entering fallback mode.</comment>
                         </number_of_retries>
                         <fallback_mode translate="label comment">
                             <label>Fallback mode</label>

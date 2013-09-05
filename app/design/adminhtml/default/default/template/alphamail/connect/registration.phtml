@@ -1,0 +1,125 @@
+<script type="text/javascript">
+    var registrationForm = null;
+
+    function submitRegistrationForm(button){
+        if(registrationForm && registrationForm.validator.validate()){
+            button.addClassName("disabled");
+            button.innerHTML = "<span>Please wait...</span>";
+            registrationForm.submit();
+        }
+    }
+
+    (function() {
+        var initializeRegistrationForm = function() {
+            registrationForm = new VarienForm('alphamail-registration-form', true);
+        };
+        if(document.loaded){
+            initializeRegistrationForm();
+        }else{
+            document.observe('dom:loaded', initializeRegistrationForm);
+        }
+    })();
+</script>
+
+<form id="alphamail-registration-form" action="<?php echo($this->getUrl('*/*/CreateAccount/')) ?>" method="post">
+	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+	<div id="page:main-container">
+		<div class="content-header">
+            <table cellspacing="0">
+                <tr>
+                    <td><h3>Create New AlphaMail Account</h3></td>
+                    <td class="form-buttons">
+                        <button type="button" class="scalable back" onclick="history.back();">
+                            <span>Back</span>
+                        </button>
+                        <button type="button" class="scalable save" onclick="submitRegistrationForm(this);">
+                            <span>Create Account</span>
+                        </button>
+                    </td>
+                 </tr>
+            </table>
+		</div>
+        <div class="entry-edit">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend">Account Details</h4>
+                <div class="form-buttons">
+                </div>
+            </div>
+            <div class="fieldset fieldset-wide" id="base_fieldset">
+                <div class="hor-scroll">
+                    <table cellspacing="0" class="form-list">
+                        <tbody>
+                            <tr>
+                                <td class="label">
+                                    <label for="fullname">Full name&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="fullname" name="fullname" value="<?php echo($fullname) ?>" title="Full name" type="text" class="input-text required-entry" placeholder="e.g. John Doe">
+                                    <?php if(array_key_exists("fullname", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-fullname" style=""><?php echo($errors["fullname"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label for="email">Email&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="email" name="email" value="<?php echo($email) ?>" title="Email" type="text" class="input-text validate-email required-entry" placeholder="e.g. john@doe.com">
+                                    <?php if(array_key_exists("email", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-email" style=""><?php echo($errors["email"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label for="password">Password&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="password" name="password" value="<?php echo($password) ?>" title="Password" type="password" class="input-text validate-password required-entry">
+                                    <?php if(array_key_exists("password", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-password" style=""><?php echo($errors["password"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label for="password_repeated">Repeat Password&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="password_repeated" name="password_repeated" value="<?php echo($password_repeated) ?>" title="Password" type="password" class="input-text validate-cpassword required-entry">
+                                    <?php if(array_key_exists("password_repeated", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-password_repeated" style=""><?php echo($errors["password_repeated"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label for="captcha_value">Verify that you're a human&nbsp;<span class="required">*</span></label>
+                                </td>
+                                <td class="value">
+                                    <input id="captcha_value" name="captcha_value" value="<?php echo($captcha_value) ?>" title="Enter code below" type="text" class="input-text required-entry" placeholder="Enter the text displayed in the image below">
+                                    <?php if(array_key_exists("captcha_value", $errors)){ ?>
+                                        <div class="validation-advice" id="advice-required-entry-captcha_value" style=""><?php echo($errors["captcha_value"]) ?></div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="value"></td>
+                                <td class="value">
+                                    <img src="<?php echo($captcha_image_url) ?>" style="border: 1px solid #aaaaaa;border-bottom-color: #c8c8c8; border-right-color: #c8c8c8;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="value"></td>
+                                <td class="value">
+                                    Too hard? <a href="<?php echo($this->getUrl('*/*/RenewCaptcha/')) ?>">Try another one</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+	</div>
+</form>

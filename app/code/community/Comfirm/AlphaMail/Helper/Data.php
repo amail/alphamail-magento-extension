@@ -2,6 +2,17 @@
 
 class Comfirm_AlphaMail_Helper_Data extends Mage_Core_Helper_Abstract {
 
+    // Event
+    const EVENT_INFO = 0;
+    const EVENT_ERROR = 1;
+    const EVENT_DEBUG = 2;
+
+    // Send
+    const SEND_QUEUED = 0;
+    const SEND_AUTHENTICATION_ERROR = 1;
+    const SEND_CONNECTION_ERROR = 2;
+    const SEND_SENT = 3;
+
 	public function isActivated(){
 		return (bool)$this->getConfigKey('general/activated') &&
             !Mage::getStoreConfigFlag('advanced/modules_disable_output/Comfirm_AlphaMail');
@@ -9,6 +20,10 @@ class Comfirm_AlphaMail_Helper_Data extends Mage_Core_Helper_Abstract {
 
     public function getAuthenticationToken(){
         return $this->getConfigKey('authentication/token');
+    }
+
+    public function setAuthenticationToken($token){
+        return $this->setConfigKey('authentication/token', $token);
     }
 
     public function isLoggingEnabled() {
@@ -79,6 +94,20 @@ class Comfirm_AlphaMail_Helper_Data extends Mage_Core_Helper_Abstract {
         return $this;
     }
 
+    public function truncateTableData(){
+        // Remove project map
+        foreach(Mage::getModel('alphamail/project_map')->getCollection() as $log){
+            $log->delete();
+        }
+        // Remove logs
+        foreach(Mage::getModel('alphamail/event_log')->getCollection() as $log){
+            $log->delete();
+        }
+        foreach(Mage::getModel('alphamail/send_log')->getCollection() as $log){
+            $log->delete();
+        }
+    }
+
     public function getConfigKey($path){
         return Mage::getStoreConfig('alphamail/' . $path);
     }
@@ -86,6 +115,10 @@ class Comfirm_AlphaMail_Helper_Data extends Mage_Core_Helper_Abstract {
     public function getDefaultCoreTemplates(){
         return Mage_Core_Model_Email_Template::getDefaultTemplates();
     }
+
+    // Logging
+
+    // Event logs
 
     public function logEvent($send_id, $message, $type) {
         if($this->isLoggingEnabled()){
@@ -103,20 +136,55 @@ class Comfirm_AlphaMail_Helper_Data extends Mage_Core_Helper_Abstract {
     }
 
     public function logInformation($message, $send_id = null) {
-        $this->logEvent($send_id, $message, 0);
+        $this->logEvent($send_id, $message, self::EVENT_INFO);
         return $this;
     }
 
     public function logError($message, $send_id = null) {
-        $this->logEvent($send_id, $message, 1);
+        $this->logEvent($send_id, $message, self::EVENT_ERROR);
         return $this;
     }
 
     public function logDebug($message, $send_id = null) {
         if($this->isDebuggingEnabled()){
-            $this->logEvent($send_id, $message, 2);
+            $this->logEvent($send_id, $message, self::EVENT_DEBUG);
         }
         return $this;
+    }
+
+    // Send logs
+
+    public function createSendLog($template_name){
+        return Mage::getModel('alphamail/send_log')
+            ->setTemplateName($template_name)
+            ->setCreatedAt(time())
+            ->save();
+    }
+
+    public function flagSendLogAsSent($send_log, $am_queue_id){
+        return $send_log->setStatus(self::SEND_SENT)
+            ->setAmQueueId($am_queue_id)
+            ->setRawPayload(null)
+            ->setSentAt(time())
+            ->save();
+    }
+
+    public function flagSendLogAsQueued($send_log, $payload){
+        return $send_log->setStatus(self::SEND_QUEUED)
+            ->setRawPayload($payload)
+            ->save();
+    }
+
+    public function flagSendLogAsConnectionError($send_log, $payload){
+        return $send_log->setStatus(self::SEND_CONNECTION_ERROR)
+            ->setRawPayload($payload)
+            ->save();
+    }
+
+    public function flagSendLogAsAuthenticationError($send_log, $payload){
+        return $send_log->setStatus(self::SEND_AUTHENTICATION_ERROR)
+            ->setRawPayload($payload)
+            ->save();
     }
 
     public function logSentMessage($am_queue_id) {

@@ -20,61 +20,7 @@
 					$token_checksum = hash("sha256", $helper->getAuthenticationToken());
 					if($helper->getConfigKey("authentication/last_validated_token_checksum") != $token_checksum){
 						$helper->setConfigKey('authentication/last_validated_token_checksum', $token_checksum);
-
-						$created_projects = array();
-						$created_templates = array();
-
-		                $server_url = $helper->getPrimaryServerUrl();
-		                $token = $helper->getAuthenticationToken();
-
-		                $project_service = AlphaMailProjectService::create()
-		                    ->setServiceUrl($server_url)
-		                    ->setApiToken($token);
-                    	
-		                $template_service = AlphaMailTemplateService::create()
-		                    ->setServiceUrl($server_url)
-		                    ->setApiToken($token);
-
-                    	foreach($template_service->getAll() as $template){
-		                	$created_templates[$template->name] = $template->id;
-		                }
-
-		                foreach($project_service->getAll() as $project){
-		                	$created_projects[$project->name] = $project->id;
-		                }
-
-						foreach ($paths as $path) {
-						    if ($path === '.' || $path === '..') continue;
-
-						    $resource_path = $setup_path . '/' . $path;
-						    if (is_dir($resource_path)) {
-						    	if(file_exists($resource_path . '/data.json')){
-						    		$data = json_decode(file_get_contents($resource_path . '/data.json'));
-
-						    		$template_html_version = @file_get_contents($resource_path . '/template.htm');
-						    		$template_txt_version = @file_get_contents($resource_path . '/template.txt');
-
-						    		if(!array_key_exists($data->name, $created_templates)){
-						    			$created_templates[$data->name] = $template_service->add(
-						    				new DetailedTemplate(
-						    					null, $data->name,
-						    					new TemplateContent(
-						    						$template_html_version,
-						    						$template_txt_version
-					    						)
-					    					)
-					    				);
-						    		}
-							    		
-							    	if(!array_key_exists($data->name, $created_projects)){
-							    		$project_service->add(new DetailedProject(
-							    			null, $data->name, $data->subject, 0,
-							    			$created_templates[$data->name])
-							    		);
-							    	}
-						    	}
-						    }
-						}
+						Mage::helper('alphamail/connection')->connect($helper->getAuthenticationToken());
 					}
 				}else{
 					$session->addError("Error: " . $diagnostic_error);
